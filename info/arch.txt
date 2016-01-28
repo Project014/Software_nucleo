@@ -1,0 +1,7 @@
+NUCLEO-L053R8
+STM32L053R8T6
+
+NUCLEO-TXXXRY
+R -> 64 pins
+Y -> code size : 
+  8 -> 64k
