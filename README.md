@@ -16,12 +16,15 @@ https://launchpad.net/gcc-arm-embedded
 Build it
 --------
 In Software_Nucleo/ :
+
     make
+
 it should build libopencm3 and miniblink
 
 Flash it
 --------
 In miniblink/ : 
+
     make flash
 
 
