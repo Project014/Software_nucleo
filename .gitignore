@@ -1,3 +1,7 @@
+# some files produced by libopencm3 makefiles
+*.d
+*.map
+
 # Object files
 *.o
 *.ko

@@ -19,7 +19,9 @@
 
 BINARY = miniblink
 
+OPENCM3_DIR = abspath(../libopencm3)
+
 LDSCRIPT = $(OPENCM3_DIR)/lib/stm32/l0/stm32l0xx8.ld
 
-include ../../Makefile.include
+include ../libopencm3.target.mk
 
