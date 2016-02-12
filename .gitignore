@@ -1,3 +1,6 @@
+#go away libopencm3
+libopencm3/
+
 # some files produced by libopencm3 makefiles
 *.d
 *.map

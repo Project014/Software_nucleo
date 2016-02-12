@@ -1,7 +1,7 @@
 
 PROJECT_DIR = miniblink
 
-.PHONY: $(PROJECT_DIR)
+.PHONY: $(PROJECT_DIR) Submodule
 
 $(PROJECT_DIR): libopencm3-lib
 	@echo "Building $@"
@@ -9,7 +9,8 @@ $(PROJECT_DIR): libopencm3-lib
 
 libopencm3/:
 	@echo "getting libopencm3"
-	$(shell git submodule init && git submodule update )
+	git submodule init
+	git submodule update
 
 libopencm3-lib: libopencm3/
 	@echo "Building $@"

@@ -26,6 +26,19 @@
 #define LED_GREEN_PIN GPIO5
 #define LED_GREEN_PORT GPIOA
 
+static struct FilteredInput {
+	int gpio_port,gpio_pin;
+	int counter;
+};
+
+void filtered_input_init(FilteredInput* filtered_input, int gpio_port, int gpio_pin ) {
+	filtered_input->gpio_port = gpio_port;
+	filtered_input->gpio_pin = gpio_pin;
+	filtered_input->counter = 0;
+}
+
+
+
 static void gpio_setup(void)
 {
 	/* Enable GPIOA clock. */
@@ -38,7 +51,15 @@ static void gpio_setup(void)
 static void delay(void)
 {
 	int i;
-	for (i = 0; i < 1600000; i++) {	/* Wait a bit. */
+	for (i = 0; i < 3200000; i++) {	/* Wait a bit. */
+		__asm__("nop");
+	}
+}
+
+static void delay_short(void)
+{
+	int i;
+	for (i = 0; i < 160000; i++) {	/* Wait a bit. */
 		__asm__("nop");
 	}
 }
@@ -69,8 +90,16 @@ int main(void)
 	gpio_setup();
 
 	while (1) {
-		gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
 		delay();
+		gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
+		delay_short();
+		gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
+		delay_short();
+		gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
+		delay_short();
+		gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
+		delay_short();
+
 	}
 
 	return 0;
