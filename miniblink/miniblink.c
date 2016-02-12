@@ -26,6 +26,7 @@
 #define LED_GREEN_PIN GPIO5
 #define LED_GREEN_PORT GPIOA
 
+typedef struct FilteredInput FilteredInput;
 static struct FilteredInput {
 	int gpio_port,gpio_pin;
 	int counter;
