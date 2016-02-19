@@ -27,20 +27,6 @@
 #define LED_GREEN_PORT GPIOA
 #define RACCROCHE_PORT GPIO
 
-typedef struct FilteredInput FilteredInput;
-static struct FilteredInput {
-	int gpio_port,gpio_pin;
-	int counter;
-};
-
-void filtered_input_init(FilteredInput* filtered_input, int gpio_port, int gpio_pin ) {
-	filtered_input->gpio_port = gpio_port;
-	filtered_input->gpio_pin = gpio_pin;
-	filtered_input->counter = 0;
-}
-
-
-
 static void gpio_setup(void)
 {
 	/* Enable GPIOA clock. */
@@ -51,22 +37,6 @@ static void gpio_setup(void)
 	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO12);
   	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11);
   	gpio_clear(GPIOA, GPIO11);
-}
-
-static void delay(void)
-{
-	int i;
-	for (i = 0; i < 3200000; i++) {	/* Wait a bit. */
-		__asm__("nop");
-	}
-}
-
-static void delay_short(void)
-{
-	int i;
-	for (i = 0; i < 160000; i++) {	/* Wait a bit. */
-		__asm__("nop");
-	}
 }
 
 int main(void)
