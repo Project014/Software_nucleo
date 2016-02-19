@@ -20,8 +20,10 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
+ #include <libopencm3/stm32/rcc.h>
+ #include <libopencm3/stm32/gpio.h>
+ #include <libopencm3/cm3/nvic.h>
+ #include <libopencm3/cm3/systick.h>
 
 #define LED_GREEN_PIN GPIO5
 #define LED_GREEN_PORT GPIOA
@@ -37,8 +39,6 @@ void filtered_input_init(FilteredInput* filtered_input, int gpio_port, int gpio_
 	filtered_input->gpio_pin = gpio_pin;
 	filtered_input->counter = 0;
 }
-
-
 
 static void gpio_setup(void)
 {
@@ -63,6 +63,17 @@ static void delay_short(void)
 	for (i = 0; i < 160000; i++) {	/* Wait a bit. */
 		__asm__("nop");
 	}
+}
+
+/* Set up timer to fire freq times per second */
+static void systick_setup(int freq)
+{
+	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
+	/* clear counter so it starts right away */
+	STK_CVR = 0;
+	systick_set_reload(32000000 / freq);
+	systick_counter_enable();
+	systick_interrupt_enable();
 }
 
 int main(void)
@@ -90,7 +101,17 @@ int main(void)
 
 	gpio_setup();
 
+	systick_setup(2);
+
+  /* init switch */
+  gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO12);
+  gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11);
+  gpio_clear(GPIOA, GPIO11);
+  /* get value */
+  gpio_get(GPIOA, GPIO12);
+
 	while (1) {
+		/*
 		delay();
 		gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
 		delay_short();
@@ -100,8 +121,12 @@ int main(void)
 		delay_short();
 		gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
 		delay_short();
-
+*/
 	}
 
 	return 0;
+}
+
+void sys_tick_handler(void) {
+	gpio_toggle(LED_GREEN_PORT, LED_GREEN_PIN);
 }
