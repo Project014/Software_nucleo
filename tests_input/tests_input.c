@@ -45,12 +45,26 @@ static void gpio_setup(void)
 {
 	/* Enable GPIOA clock. */
 	rcc_periph_clock_enable(RCC_GPIOA);
+	/* Enable GPIOA clock. */
+	rcc_periph_clock_enable(RCC_GPIOC);
 
 	/* set pins to output mode, push pull */
 	gpio_mode_setup(LED_GREEN_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LED_GREEN_PIN);
+
+	/* interrupteur raccroché/décroché */
 	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO12);
   	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11);
   	gpio_clear(GPIOA, GPIO11);
+
+	/* interrupteur cadran 1 */
+	gpio_mode_setup(GPIOC, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO6);
+  	gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO5);
+  	gpio_clear(GPIOC, GPIO5);
+
+	/* interrupteur cadran 2 */
+	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO9);
+  	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO8);
+  	gpio_clear(GPIOA, GPIO8);
 }
 
 static void delay(void)
@@ -95,7 +109,7 @@ int main(void)
 	gpio_setup();
 
 	while (1) {
-		if( gpio_get(GPIOA, GPIO12) )
+		if(gpio_get(GPIOA, GPIO12))
 			gpio_set(LED_GREEN_PORT, LED_GREEN_PIN);
 		else
 			gpio_clear(LED_GREEN_PORT, LED_GREEN_PIN);
