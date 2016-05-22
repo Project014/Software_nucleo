@@ -25,7 +25,7 @@
  #include <libopencm3/cm3/nvic.h>
  #include <libopencm3/cm3/systick.h>
 
-#define LED_GREEN_PIN GPIO5
+#define LED_GREEN_PIN GPIO0
 #define LED_GREEN_PORT GPIOA
 
 typedef struct FilteredInput FilteredInput;

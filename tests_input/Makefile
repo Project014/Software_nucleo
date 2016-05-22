@@ -17,10 +17,13 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-BINARY = tests_input
+BINARY = main
 
-OBJS += time.o
+OBJS += clock.o \
+	pwm.o \
+	led.o
 
+CPPFLAGS += --std=gnu11 -Iinclude
 
 OPENCM3_DIR = ../libopencm3
 

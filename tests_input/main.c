@@ -5,15 +5,6 @@
 
 
 
-void pwm_update_callback(uint16_t* buff) {
-  static uint16_t cnt = 0;
-  const uint16_t cnt_max = 124;
-  cnt++;
-  if ( cnt > cnt_max) {
-    cnt = 0;
-  }
-  *buff = cnt;
-}
 
 int main(void)
 {
