@@ -5,7 +5,6 @@ Readme
 
 This is the source code for the stm32l053r8-nucleo used in the project014.
 It is based on a fork of libopencm3 as stm32l0 port is still incomplete in the main repo.
-For now, clock chain is configured and it blinks a led
 
 Prerequisites
 -------------
@@ -18,8 +17,6 @@ Build it
 In Software_Nucleo/ :
 
     make
-
-it should build libopencm3 and miniblink
 
 Flash it
 --------
