@@ -5,6 +5,12 @@
 #include "keypad_masquerade.h"
 #include "rotary_dial.h"
 
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/exti.h>
+#include <libopencm3/stm32/syscfg.h>
+
 typedef struct {
   char lin, col;
 }combi_t;
@@ -22,21 +28,25 @@ combi_t conv[10] = {
   {1, 2},                       /* 9 */
 };
 
-void on_get_digit(char digit) {
-  if ( !digit ) {
-    return;
-  }
-
-  if ( digit == 10 ) {
-    digit = 0;
-  }
-
-  combi_t combi = conv[digit];
+static void keypad_toggle_digit(char digit) {
+  combi_t combi = conv[digit - '0'];
   keypad_masquerade_toggle_key(combi.lin, combi.col);
 }
 
-int main(void)
-{
+static void keypad_sequence(const char* seq) {
+  while ( *seq ) {
+    keypad_toggle_digit(*seq++);
+  }
+}
+
+static void on_get_digit(char digit) {
+  keypad_toggle_digit(digit);
+  led_green_toggle();
+}
+
+int hp_enabled = 0;
+
+int main(void) {
   clock_init();
   time_init();
   pwm_init(0);
@@ -44,18 +54,19 @@ int main(void)
   keypad_masquerade_init();
   rotary_dial_init(on_get_digit);
 
-  keypad_masquerade_toggle_key(0, 0); /* hp on */
-  
+  /* hp key config */
+  gpio_mode_setup(GPIOC, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO4);
 
-  //keypad_masquerade_press_key(uint8_t line, uint8_t column);
-
-  /* while (1) { */
-  /*   time_delay_ms(100); */
-  /*   keypad_masquerade_toggle_key(0, 1); */
-  /*   time_delay_ms(100); */
-  /*   keypad_masquerade_toggle_key(1, 2); */
-    
-  /* } */
+  while ( 1 ) {
+    if ( !hp_enabled && !gpio_get(GPIOC, GPIO4)) {
+      keypad_masquerade_toggle_key(0, 0); /* hp on */
+      hp_enabled = 1;
+    }
+    if ( hp_enabled && gpio_get(GPIOC, GPIO4)) {
+      keypad_masquerade_toggle_key(0, 0); /* hp off */
+      hp_enabled = 0;
+    }
+  }
 
   return 0;
 }

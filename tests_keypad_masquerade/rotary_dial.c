@@ -53,16 +53,6 @@ void rotary_dial_init(rotary_dial_callback_t on_get_digit_callback) {
 }
 
 static void key_enable_on_event(void) {
-  
-  /* static int last_tick = 0; */
-  /* int current_tick = time_get_tick_ms(); */
-  /* int delta =  current_tick - last_tick; */
-  /* if ( delta < 30 ) { */
-  /*   return ; */
-  /* } */
-  /* last_tick = current_tick; */
-
-  
   switch ( dial_state ) {
   case dial_state_idle: {
     dial_state = dial_state_counting;
@@ -73,9 +63,9 @@ static void key_enable_on_event(void) {
   case dial_state_counting: {
     dial_state = dial_state_idle;
     if ( callback ) {
-      callback(dial_count_num);
-      exti_set_trigger(EXTI4, EXTI_TRIGGER_FALLING);
+      callback(dial_count_num == 10 ? '0' : dial_count_num + '0');
     }
+    exti_set_trigger(EXTI4, EXTI_TRIGGER_FALLING);
     break;
   }
   default:
@@ -84,25 +74,12 @@ static void key_enable_on_event(void) {
 }
 
 static void key_count_on_event(void) {
-
-  /* static int last_tick = 0; */
-  /* int current_tick = time_get_tick_ms(); */
-  /* int delta =  current_tick - last_tick; */
-  /* if ( delta < 5 ) { */
-  /*   return ; */
-  /* } */
-  /* last_tick = current_tick; */
-
-  led_green_toggle();
-  
-  
   if ( dial_state == dial_state_counting ) {
     dial_count_num++;
   }
 }
 
 void exti4_15_isr() {
-
   if ( exti_get_flag_status(EXTI4) ) {
     key_enable_on_event();
     exti_reset_request(EXTI4);
